@@ -1,6 +1,12 @@
+const User = require('./user.model');
+
+const USERS = [
+  new User({ name: 'first', login: 'first', password: 'sdf#938e' }),
+  new User({ name: 'second', login: 'second', password: 'af3@234f' })
+];
+
 const getAll = async () => {
-  // TODO: mock implementation. should be replaced during task development
-  return [];
+  return USERS;
 };
 
 module.exports = { getAll };
