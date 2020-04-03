@@ -13,8 +13,29 @@ router.route('/:id').get(async (req, res) => {
     res.json(User.toResponse(user));
   } catch (err) {
     console.log(err);
-    res.status(404);
-    res.end('User not found');
+    res.status(404).json({
+      message: `User with id = ${req.params.id} not found`
+    });
+  }
+});
+
+router.route('/').post(async (req, res) => {
+  try {
+    const user = await usersService.addUser(req.body);
+    res.status(200).json(User.toResponse(user));
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ message: 'Bad request' });
+  }
+});
+
+router.route('/:id').put(async (req, res) => {
+  try {
+    const user = await usersService.updateUser(req.params.id, req.body);
+    res.status(200).json(User.toResponse(user));
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ message: 'Bad request' });
   }
 });
 
