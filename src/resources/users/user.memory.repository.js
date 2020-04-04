@@ -5,8 +5,8 @@ const USERS = [
   new User({ name: 'second', login: 'second', password: 'af3@234f' })
 ];
 
-const getAll = async () => {
+const getAllUsers = async () => {
   return USERS;
 };
 
-module.exports = { getAll };
+module.exports = { getAllUsers };
