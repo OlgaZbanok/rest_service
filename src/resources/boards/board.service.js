@@ -1,43 +1,22 @@
 const boardsRepo = require('./board.memory.repository');
+
 const Board = require('./board.model');
 
-const getAll = () => boardsRepo.getAllBoards();
+const getAll = () => boardsRepo.getAll();
 
-const getBoard = id =>
-  getAll().then(boards => {
-    const detectBoard = boards.find(board => board.id === id);
-    if (!detectBoard) {
-      throw new Error();
-    }
-    return detectBoard;
-  });
+const getById = id => boardsRepo.getById(id);
 
-const addBoard = newBoard =>
-  getAll().then(boards => {
-    boards.push(new Board({ ...newBoard }));
-    return boards[boards.length - 1];
-  });
+const add = data => {
+  const board = new Board({ ...data });
+  boardsRepo.add(board);
+  return board;
+};
 
-const updateBoard = (id, updBoard) =>
-  getAll().then(boards => {
-    const index = boards.findIndex(board => board.id === id);
+const update = (id, data) => {
+  const board = boardsRepo.update(id, data);
+  return board;
+};
 
-    if (updBoard.columns.length !== boards[index].columns.length) {
-      throw new Error();
-    }
-    Object.assign(boards[index], updBoard);
+const remove = id => boardsRepo.remove(id);
 
-    return boards[index];
-  });
-
-const deleteBoard = id =>
-  getAll().then(boards => {
-    const index = boards.findIndex(board => board.id === id);
-    if (index < 0) {
-      throw new Error();
-    }
-    boards.splice(index, 1);
-    return boards;
-  });
-
-module.exports = { getAll, getBoard, addBoard, updateBoard, deleteBoard };
+module.exports = { getAll, getById, add, update, remove };

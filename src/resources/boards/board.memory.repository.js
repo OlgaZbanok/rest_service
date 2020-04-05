@@ -1,23 +1,35 @@
 const Board = require('./board.model');
 
-const BOARDS = [
-  new Board({
-    title: 'board1',
-    columns: [
-      {
-        title: 'col1',
-        order: 1
-      },
-      {
-        title: 'col2',
-        order: 2
-      }
-    ]
-  })
-];
+let BOARDS = [new Board()];
 
-const getAllBoards = async () => {
-  return BOARDS;
+const getAll = async () => BOARDS;
+
+const getById = async id => {
+  const findBoard = BOARDS.find(board => board.id === id);
+  if (!findBoard) {
+    throw new Error();
+  }
+  return findBoard;
+};
+const add = async data => BOARDS.push(data);
+
+const update = async (id, data) => {
+  const findBoard = BOARDS.find(board => board.id === id);
+  if (!findBoard) {
+    throw new Error();
+  }
+  Object.assign(findBoard, data);
+  return findBoard;
 };
 
-module.exports = { getAllBoards };
+const remove = async id => {
+  const findBoard = BOARDS.find(board => board.id === id);
+  if (!findBoard) {
+    throw new Error();
+  }
+
+  BOARDS = BOARDS.filter(board => board.id !== id);
+  return;
+};
+
+module.exports = { getAll, getById, add, update, remove };

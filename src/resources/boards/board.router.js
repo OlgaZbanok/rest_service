@@ -14,7 +14,7 @@ router.route('/').get(async (req, res) => {
 
 router.route('/:id').get(async (req, res) => {
   try {
-    const board = await boardsService.getBoard(req.params.id);
+    const board = await boardsService.getById(req.params.id);
     res.status(200).json(board);
   } catch (err) {
     console.log(err);
@@ -26,7 +26,7 @@ router.route('/:id').get(async (req, res) => {
 
 router.route('/').post(async (req, res) => {
   try {
-    const board = await boardsService.addBoard(req.body);
+    const board = await boardsService.add(req.body);
     res.status(200).json(board);
   } catch (err) {
     console.log(err);
@@ -36,7 +36,7 @@ router.route('/').post(async (req, res) => {
 
 router.route('/:id').put(async (req, res) => {
   try {
-    const board = await boardsService.updateBoard(req.params.id, req.body);
+    const board = await boardsService.update(req.params.id, req.body);
     res.status(200).json(board);
   } catch (err) {
     console.log(err);
@@ -46,7 +46,7 @@ router.route('/:id').put(async (req, res) => {
 
 router.route('/:id').delete(async (req, res) => {
   try {
-    await boardsService.deleteBoard(req.params.id);
+    await boardsService.remove(req.params.id);
     res.status(204).json({ message: 'The border has been deleted' });
   } catch (err) {
     console.log(err);
