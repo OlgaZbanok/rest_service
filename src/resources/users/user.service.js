@@ -1,42 +1,25 @@
 const usersRepo = require('./user.memory.repository');
 const User = require('./user.model');
 
-const getAll = () => usersRepo.getAllUsers();
+const getAll = () => usersRepo.getAll();
 
-const getUser = id =>
-  getAll().then(users => {
-    const detectUser = users.find(user => user.id === id);
-    if (!detectUser) {
-      throw new Error();
-    }
-    return detectUser;
-  });
+const getById = id => usersRepo.getById(id);
 
-const addUser = newUser =>
-  getAll().then(users => {
-    const { name, login, password } = newUser;
-    users.push(new User({ name, login, password }));
-    return users[users.length - 1];
-  });
+const add = data => {
+  const { name, login, password } = data;
+  const user = new User({ name, login, password });
+  usersRepo.add(user);
+  return user;
+};
 
-const updateUser = (id, updUser) =>
-  getAll().then(users => {
-    const index = users.findIndex(user => user.id === id);
-    // eslint-disable-next-line no-unused-vars
-    const { password, ...expectedUser } = updUser;
-    Object.assign(users[index], expectedUser);
+const update = (id, data) => {
+  // eslint-disable-next-line no-unused-vars
+  const { password, ...expectedUser } = data;
+  const user = usersRepo.update(id, expectedUser);
 
-    return users[index];
-  });
+  return user;
+};
 
-const deleteUser = id =>
-  getAll().then(users => {
-    const index = users.findIndex(user => user.id === id);
-    if (index < 0) {
-      throw new Error();
-    }
-    users.splice(index, 1);
-    return users;
-  });
+const remove = id => usersRepo.remove(id);
 
-module.exports = { getAll, getUser, addUser, updateUser, deleteUser };
+module.exports = { getAll, getById, add, update, remove };

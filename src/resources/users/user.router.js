@@ -14,7 +14,7 @@ router.route('/').get(async (req, res) => {
 
 router.route('/:id').get(async (req, res) => {
   try {
-    const user = await usersService.getUser(req.params.id);
+    const user = await usersService.getById(req.params.id);
     res.json(User.toResponse(user));
   } catch (err) {
     console.log(err);
@@ -26,7 +26,7 @@ router.route('/:id').get(async (req, res) => {
 
 router.route('/').post(async (req, res) => {
   try {
-    const user = await usersService.addUser(req.body);
+    const user = await usersService.add(req.body);
     res.status(200).json(User.toResponse(user));
   } catch (err) {
     console.log(err);
@@ -36,7 +36,7 @@ router.route('/').post(async (req, res) => {
 
 router.route('/:id').put(async (req, res) => {
   try {
-    const user = await usersService.updateUser(req.params.id, req.body);
+    const user = await usersService.update(req.params.id, req.body);
     res.status(200).json(User.toResponse(user));
   } catch (err) {
     console.log(err);
@@ -46,7 +46,7 @@ router.route('/:id').put(async (req, res) => {
 
 router.route('/:id').delete(async (req, res) => {
   try {
-    await usersService.deleteUser(req.params.id);
+    await usersService.remove(req.params.id);
     res.status(204).json({ message: 'The user has been deleted' });
   } catch (err) {
     console.log(err);

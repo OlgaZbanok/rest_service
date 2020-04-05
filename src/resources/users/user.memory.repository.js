@@ -1,12 +1,35 @@
 const User = require('./user.model');
 
-const USERS = [
-  new User({ name: 'first', login: 'first', password: 'sdf#938e' }),
-  new User({ name: 'second', login: 'second', password: 'af3@234f' })
-];
+let USERS = [new User()];
 
-const getAllUsers = async () => {
-  return USERS;
+const getAll = async () => USERS;
+
+const getById = async id => {
+  const findUser = USERS.find(user => user.id === id);
+  if (!findUser) {
+    throw new Error();
+  }
+  return findUser;
 };
 
-module.exports = { getAllUsers };
+const add = async user => USERS.push(user);
+
+const update = async (id, data) => {
+  const findUser = USERS.find(user => user.id === id);
+  if (!findUser) {
+    throw new Error();
+  }
+  Object.assign(findUser, data);
+  return findUser;
+};
+
+const remove = async id => {
+  const findUser = USERS.find(user => user.id === id);
+  if (!findUser) {
+    throw new Error();
+  }
+  USERS = USERS.filter(user => user.id !== id);
+  return;
+};
+
+module.exports = { getAll, getById, add, update, remove };
