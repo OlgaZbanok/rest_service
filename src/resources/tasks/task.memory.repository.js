@@ -33,4 +33,25 @@ const remove = async (boardId, taskId) => {
   return;
 };
 
-module.exports = { getByBoardId, getByTaskId, add, update, remove };
+const resetUser = async id => {
+  TASKS = TASKS.map(task => {
+    if (task.userId === id) {
+      task.userId = null;
+    }
+    return task;
+  });
+};
+
+const removeByBoard = async id => {
+  TASKS = TASKS.filter(task => task.boardId !== id);
+};
+
+module.exports = {
+  getByBoardId,
+  getByTaskId,
+  add,
+  update,
+  remove,
+  resetUser,
+  removeByBoard
+};
