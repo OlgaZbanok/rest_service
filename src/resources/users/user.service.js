@@ -17,13 +17,13 @@ const update = (id, data) => {
   // eslint-disable-next-line no-unused-vars
   const { password, ...expectedUser } = data;
   const user = usersRepo.update(id, expectedUser);
-
   return user;
 };
 
-const remove = id => {
-  tasksService.resetUser(id);
-  usersRepo.remove(id);
+const remove = async id => {
+  const result = await usersRepo.remove(id);
+  await tasksService.resetUser(id);
+  return result;
 };
 
 module.exports = { getAll, getById, add, update, remove };

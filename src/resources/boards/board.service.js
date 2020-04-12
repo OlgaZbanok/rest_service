@@ -18,9 +18,11 @@ const update = (id, data) => {
   return board;
 };
 
-const remove = id => {
-  tasksService.removeByBoard(id);
-  boardsRepo.remove(id);
+const remove = async id => {
+  const result = await boardsRepo.remove(id);
+  await tasksService.removeByBoard(id);
+
+  return result;
 };
 
 module.exports = { getAll, getById, add, update, remove };

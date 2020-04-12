@@ -7,7 +7,7 @@ const getByTaskId = params => tasksRepo.getByTaskId(params.boardId, params.id);
 
 const add = (boardId, data) => {
   const task = new Task({ ...data, boardId });
-  tasksRepo.add(boardId, task);
+  tasksRepo.add(task);
   return task;
 };
 

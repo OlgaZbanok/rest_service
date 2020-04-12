@@ -2,34 +2,35 @@ const Board = require('./board.model');
 
 let BOARDS = [new Board()];
 
-const getAll = async () => BOARDS;
+const getAll = async () => await BOARDS;
 
 const getById = async id => {
-  const findBoard = BOARDS.find(board => board.id === id);
+  const findBoard = await BOARDS.find(board => board.id === id);
   if (!findBoard) {
-    throw new Error();
+    return false;
   }
   return findBoard;
 };
-const add = async data => BOARDS.push(data);
+
+const add = async data => await BOARDS.push(data);
 
 const update = async (id, data) => {
-  const findBoard = BOARDS.find(board => board.id === id);
+  const findBoard = await BOARDS.find(board => board.id === id);
   if (!findBoard) {
-    throw new Error();
+    return false;
   }
-  Object.assign(findBoard, data);
+  await Object.assign(findBoard, data);
   return findBoard;
 };
 
 const remove = async id => {
   const findBoard = BOARDS.find(board => board.id === id);
   if (!findBoard) {
-    throw new Error();
+    return false;
   }
 
   BOARDS = BOARDS.filter(board => board.id !== id);
-  return;
+  return true;
 };
 
 module.exports = { getAll, getById, add, update, remove };

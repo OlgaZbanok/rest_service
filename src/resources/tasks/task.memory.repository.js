@@ -3,34 +3,43 @@ const Task = require('./task.model');
 let TASKS = [new Task()];
 
 const getByBoardId = async boardId => {
-  const tasksByBoardId = TASKS.filter(task => task.boardId === boardId);
+  const tasksByBoardId = await TASKS.filter(task => task.boardId === boardId);
   if (!tasksByBoardId.length) {
-    throw new Error();
+    return false;
   }
   return tasksByBoardId;
 };
 
 const getByTaskId = async (boardId, taskId) => {
   const tasksByBoardId = await getByBoardId(boardId);
-  const tasksById = tasksByBoardId.find(task => task.id === taskId);
+  if (!tasksByBoardId) {
+    return false;
+  }
+  const tasksById = await tasksByBoardId.find(task => task.id === taskId);
   if (!tasksById) {
-    throw new Error();
+    return false;
   }
   return tasksById;
 };
 
-const add = async (boardId, task) => TASKS.push({ ...task });
+const add = async task => await TASKS.push({ ...task });
 
 const update = async (boardId, taskId, data) => {
   const updateTask = await getByTaskId(boardId, taskId);
-  Object.assign(updateTask, data);
+  if (!updateTask) {
+    return false;
+  }
+  await Object.assign(updateTask, data);
   return updateTask;
 };
 
 const remove = async (boardId, taskId) => {
   const tasksByBoardId = await getByBoardId(boardId);
-  TASKS = tasksByBoardId.filter(task => task.id !== taskId);
-  return;
+  if (!tasksByBoardId) {
+    return false;
+  }
+  TASKS = await tasksByBoardId.filter(task => task.id !== taskId);
+  return true;
 };
 
 const resetUser = async id => {
@@ -44,6 +53,7 @@ const resetUser = async id => {
 
 const removeByBoard = async id => {
   TASKS = TASKS.filter(task => task.boardId !== id);
+  return true;
 };
 
 module.exports = {
