@@ -4,7 +4,8 @@ const logger = createLogger({
   transports: [
     new transports.Console({
       level: 'silly',
-      format: format.combine(format.colorize(), format.cli())
+      format: format.combine(format.colorize(), format.cli()),
+      handleExceptions: true
     }),
     new transports.File({
       filename: 'logs/error.log',
@@ -14,13 +15,16 @@ const logger = createLogger({
     new transports.File({
       filename: 'logs/all.log',
       level: 'info',
+      handleExceptions: true,
       format: format.combine(format.uncolorize(), format.json())
     })
   ],
   exceptionHandlers: [
     new transports.File({
       filename: 'logs/exceptions.log',
-      format: format.combine(format.uncolorize(), format.json())
+      handleExceptions: true,
+      json: true,
+      format: format.combine(format.prettyPrint())
     })
   ],
   exitOnError: true
