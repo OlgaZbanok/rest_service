@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const Board = require('./board.model');
 const validateUUID = require('../../helpers/validateUUID');
 const { ErrorHandler } = require('../../helpers/error');
 const boardsService = require('./board.service');
@@ -8,7 +9,7 @@ router
   .get(async (req, res, next) => {
     try {
       const boards = await boardsService.getAll();
-      res.status(200).json(boards);
+      res.status(200).json(boards.map(Board.toResponse));
     } catch (err) {
       return next(err);
     }
@@ -19,7 +20,7 @@ router
       if (!board) {
         throw new ErrorHandler(400, 'Bad request');
       }
-      res.status(200).json(board);
+      res.status(200).json(Board.toResponse(board));
     } catch (err) {
       return next(err);
     }
@@ -36,7 +37,7 @@ router
           `Board with id = ${req.params.id} is not found`
         );
       }
-      res.status(200).json(board);
+      res.status(200).json(Board.toResponse(board));
     } catch (err) {
       return next(err);
     }
@@ -47,7 +48,7 @@ router
       if (!board) {
         throw new ErrorHandler(400, 'Bad request');
       }
-      res.status(200).json(board);
+      res.status(200).json(Board.toResponse(board));
     } catch (err) {
       return next(err);
     }
