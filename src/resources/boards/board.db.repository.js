@@ -13,7 +13,7 @@ const add = async data => {
 };
 
 const update = async (id, data) => {
-  return Board.updateOne({ _id: id }, data);
+  return Board.findByIdAndUpdate({ _id: id }, data, { new: true });
 };
 
 const remove = async id => {

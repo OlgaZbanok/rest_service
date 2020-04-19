@@ -13,7 +13,7 @@ const add = async user => {
 };
 
 const update = async (id, data) => {
-  return User.updateOne({ _id: id }, data);
+  return User.findByIdAndUpdate({ _id: id }, data, { new: true });
 };
 
 const remove = async id => {
