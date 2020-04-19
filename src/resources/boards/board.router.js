@@ -17,9 +17,11 @@ router
   .post(async (req, res, next) => {
     try {
       const board = await boardsService.add(req.body);
+
       if (!board) {
         throw new ErrorHandler(400, 'Bad request');
       }
+
       res.status(200).json(Board.toResponse(board));
     } catch (err) {
       return next(err);
@@ -31,12 +33,14 @@ router
   .get(validateUUID, async (req, res, next) => {
     try {
       const board = await boardsService.getById(req.params.id);
+
       if (!board) {
         throw new ErrorHandler(
           404,
           `Board with id = ${req.params.id} is not found`
         );
       }
+
       res.status(200).json(Board.toResponse(board));
     } catch (err) {
       return next(err);
@@ -45,9 +49,11 @@ router
   .put(validateUUID, async (req, res, next) => {
     try {
       const board = await boardsService.update(req.params.id, req.body);
+
       if (!board) {
         throw new ErrorHandler(400, 'Bad request');
       }
+
       res.status(200).json(Board.toResponse(board));
     } catch (err) {
       return next(err);
@@ -56,9 +62,11 @@ router
   .delete(validateUUID, async (req, res, next) => {
     try {
       const result = await boardsService.remove(req.params.id);
+
       if (!result) {
         throw new ErrorHandler(404, 'Board is not found');
       }
+
       res.status(204).json({ message: 'The border has been deleted' });
     } catch (err) {
       return next(err);

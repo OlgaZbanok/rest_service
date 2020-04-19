@@ -9,9 +9,11 @@ router
   .get(async (req, res, next) => {
     try {
       const tasks = await tasksService.getByBoardId(req.params.boardId);
+
       if (!tasks) {
         throw new ErrorHandler(400, 'Bad request');
       }
+
       res.status(200).json(tasks.map(Task.toResponse));
     } catch (err) {
       return next(err);
@@ -20,9 +22,11 @@ router
   .post(async (req, res, next) => {
     try {
       const task = await tasksService.add(req.params.boardId, req.body);
+
       if (!task) {
         throw new ErrorHandler(400, 'Bad request');
       }
+
       res.status(200).json(Task.toResponse(task));
     } catch (err) {
       return next(err);
@@ -34,12 +38,14 @@ router
   .get(validateUUID, async (req, res, next) => {
     try {
       const task = await tasksService.getByTaskId(req.params);
+
       if (!task) {
         throw new ErrorHandler(
           404,
           `Task with id = ${req.params.id} is not found`
         );
       }
+
       res.status(200).json(Task.toResponse(task));
     } catch (err) {
       return next(err);
@@ -48,9 +54,11 @@ router
   .put(validateUUID, async (req, res, next) => {
     try {
       const task = await tasksService.update(req.params, req.body);
+
       if (!task) {
         throw new ErrorHandler(400, 'Bad request');
       }
+
       res.status(200).json(Task.toResponse(task));
     } catch (err) {
       return next(err);
@@ -59,9 +67,11 @@ router
   .delete(validateUUID, async (req, res, next) => {
     try {
       const result = await tasksService.remove(req.params);
+
       if (!result) {
         throw new ErrorHandler(404, 'Task is not found');
       }
+
       res.status(204).json({ message: 'The task has been deleted' });
     } catch (err) {
       return next(err);
