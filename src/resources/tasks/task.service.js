@@ -1,24 +1,26 @@
 const tasksRepo = require('./task.db.repository');
 const Task = require('./task.model');
 
-const getByBoardId = boardId => tasksRepo.getByBoardId(boardId);
+const getByBoardId = async boardId => await tasksRepo.getByBoardId(boardId);
 
-const getByTaskId = params => tasksRepo.getByTaskId(params.boardId, params.id);
+const getByTaskId = async params =>
+  await tasksRepo.getByTaskId(params.boardId, params.id);
 
-const add = (boardId, data) => {
+const add = async (boardId, data) => {
   const task = new Task({ ...data, boardId });
-  tasksRepo.add(task);
+  await tasksRepo.add(task);
   return task;
 };
 
-const update = (params, data) =>
-  tasksRepo.update(params.boardId, params.id, data);
+const update = async (params, data) =>
+  await tasksRepo.update(params.boardId, params.id, data);
 
-const remove = params => tasksRepo.remove(params.boardId, params.id);
+const remove = async params =>
+  await tasksRepo.remove(params.boardId, params.id);
 
-const resetUser = id => tasksRepo.resetUser(id);
+const resetUser = async id => await tasksRepo.resetUser(id);
 
-const removeByBoard = id => tasksRepo.removeByBoard(id);
+const removeByBoard = async id => await tasksRepo.removeByBoard(id);
 
 module.exports = {
   getByBoardId,

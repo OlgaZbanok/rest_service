@@ -2,18 +2,18 @@ const boardsRepo = require('./board.db.repository');
 const tasksService = require('../tasks/task.service');
 const Board = require('./board.model');
 
-const getAll = () => boardsRepo.getAll();
+const getAll = async () => await boardsRepo.getAll();
 
-const getById = id => boardsRepo.getById(id);
+const getById = async id => await boardsRepo.getById(id);
 
-const add = data => {
+const add = async data => {
   const board = new Board({ ...data });
-  boardsRepo.add(board);
+  await boardsRepo.add(board);
   return board;
 };
 
-const update = (id, data) => {
-  const board = boardsRepo.update(id, data);
+const update = async (id, data) => {
+  const board = await boardsRepo.update(id, data);
   return board;
 };
 
