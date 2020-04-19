@@ -1,7 +1,6 @@
 const { PORT } = require('./common/config');
 const { connectDB } = require('./db/db.client');
 const app = require('./app');
-require('dotenv').config();
 
 process.on('uncaughtException', err => {
   console.error(`UncaughtException captured: ${err.message}`);
