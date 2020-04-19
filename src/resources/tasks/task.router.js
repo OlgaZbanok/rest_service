@@ -1,4 +1,5 @@
 const router = require('express').Router({ mergeParams: true });
+const Task = require('./task.model');
 const validateUUID = require('../../helpers/validateUUID');
 const { ErrorHandler } = require('../../helpers/error');
 const tasksService = require('./task.service');
@@ -11,7 +12,7 @@ router
       if (!tasks) {
         throw new ErrorHandler(400, 'Bad request');
       }
-      res.status(200).json(tasks);
+      res.status(200).json(tasks.map(Task.toResponse));
     } catch (err) {
       return next(err);
     }
@@ -22,7 +23,7 @@ router
       if (!task) {
         throw new ErrorHandler(400, 'Bad request');
       }
-      res.status(200).json(task);
+      res.status(200).json(Task.toResponse(task));
     } catch (err) {
       return next(err);
     }
@@ -39,7 +40,7 @@ router
           `Task with id = ${req.params.id} is not found`
         );
       }
-      res.status(200).json(task);
+      res.status(200).json(Task.toResponse(task));
     } catch (err) {
       return next(err);
     }
@@ -50,7 +51,7 @@ router
       if (!task) {
         throw new ErrorHandler(400, 'Bad request');
       }
-      res.status(200).json(task);
+      res.status(200).json(Task.toResponse(task));
     } catch (err) {
       return next(err);
     }
