@@ -1,5 +1,6 @@
 const { PORT } = require('./common/config');
 const { connectDB } = require('./db/db.client');
+const { logger } = require('./helpers/logger');
 const app = require('./app');
 
 process.on('uncaughtException', err => {
@@ -12,6 +13,6 @@ process.on('unhandledRejection', reason => {
 
 connectDB(() => {
   app.listen(PORT, () =>
-    console.log(`App is running on http://localhost:${PORT}`)
+    logger.info(`App is running on http://localhost:${PORT}`)
   );
 });
