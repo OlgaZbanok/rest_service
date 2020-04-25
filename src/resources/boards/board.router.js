@@ -3,13 +3,20 @@ const Board = require('./board.model');
 const validateUUID = require('../../helpers/validateUUID');
 const { ErrorHandler } = require('../../helpers/error');
 const boardsService = require('./board.service');
+const {
+  BAD_REQUEST,
+  OK,
+  NOT_FOUND,
+  NO_CONTENT,
+  getStatusText
+} = require('http-status-codes');
 
 router
   .route('/')
   .get(async (req, res, next) => {
     try {
       const boards = await boardsService.getAll();
-      res.status(200).json(boards.map(Board.toResponse));
+      res.status(OK).json(boards.map(Board.toResponse));
     } catch (err) {
       return next(err);
     }
@@ -19,10 +26,10 @@ router
       const board = await boardsService.add(req.body);
 
       if (!board) {
-        throw new ErrorHandler(400, 'Bad request');
+        throw new ErrorHandler(BAD_REQUEST, getStatusText(BAD_REQUEST));
       }
 
-      res.status(200).json(Board.toResponse(board));
+      res.status(OK).json(Board.toResponse(board));
     } catch (err) {
       return next(err);
     }
@@ -36,12 +43,12 @@ router
 
       if (!board) {
         throw new ErrorHandler(
-          404,
+          NOT_FOUND,
           `Board with id = ${req.params.id} is not found`
         );
       }
 
-      res.status(200).json(Board.toResponse(board));
+      res.status(OK).json(Board.toResponse(board));
     } catch (err) {
       return next(err);
     }
@@ -51,10 +58,10 @@ router
       const board = await boardsService.update(req.params.id, req.body);
 
       if (!board) {
-        throw new ErrorHandler(400, 'Bad request');
+        throw new ErrorHandler(BAD_REQUEST, getStatusText(BAD_REQUEST));
       }
 
-      res.status(200).json(Board.toResponse(board));
+      res.status(OK).json(Board.toResponse(board));
     } catch (err) {
       return next(err);
     }
@@ -64,10 +71,10 @@ router
       const result = await boardsService.remove(req.params.id);
 
       if (!result) {
-        throw new ErrorHandler(404, 'Board is not found');
+        throw new ErrorHandler(NOT_FOUND, getStatusText(NOT_FOUND));
       }
 
-      res.status(204).json({ message: 'The border has been deleted' });
+      res.status(NO_CONTENT).json({ message: 'The border has been deleted' });
     } catch (err) {
       return next(err);
     }

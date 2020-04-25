@@ -3,13 +3,20 @@ const validateUUID = require('../../helpers/validateUUID');
 const { ErrorHandler } = require('../../helpers/error');
 const User = require('./user.model');
 const usersService = require('./user.service');
+const {
+  BAD_REQUEST,
+  OK,
+  NOT_FOUND,
+  NO_CONTENT,
+  getStatusText
+} = require('http-status-codes');
 
 router
   .route('/')
   .get(async (req, res, next) => {
     try {
       const users = await usersService.getAll();
-      return res.status(200).json(users.map(User.toResponse));
+      return res.status(OK).json(users.map(User.toResponse));
     } catch (err) {
       return next(err);
     }
@@ -17,16 +24,16 @@ router
   .post(async (req, res, next) => {
     try {
       if (!req.body.name || !req.body.login || !req.body.password) {
-        throw new ErrorHandler(400, 'Invalid data');
+        throw new ErrorHandler(BAD_REQUEST, getStatusText(BAD_REQUEST));
       }
 
       const user = await usersService.add(req.body);
 
       if (!user) {
-        throw new ErrorHandler(400, 'Bad request');
+        throw new ErrorHandler(BAD_REQUEST, getStatusText(BAD_REQUEST));
       }
 
-      return res.status(200).json(User.toResponse(user));
+      return res.status(OK).json(User.toResponse(user));
     } catch (err) {
       return next(err);
     }
@@ -40,7 +47,7 @@ router
 
       if (!user) {
         throw new ErrorHandler(
-          404,
+          NOT_FOUND,
           `User with id = ${req.params.id} not found`
         );
       }
@@ -53,16 +60,16 @@ router
   .put(validateUUID, async (req, res, next) => {
     try {
       if (!req.body.name || !req.body.login || !req.body.password) {
-        throw new ErrorHandler(400, 'Invalid data');
+        throw new ErrorHandler(BAD_REQUEST, getStatusText(BAD_REQUEST));
       }
 
       const user = await usersService.update(req.params.id, req.body);
 
       if (!user) {
-        throw new ErrorHandler(400, 'Bad request');
+        throw new ErrorHandler(BAD_REQUEST, getStatusText(BAD_REQUEST));
       }
 
-      return res.status(200).json(User.toResponse(user));
+      return res.status(OK).json(User.toResponse(user));
     } catch (err) {
       return next(err);
     }
@@ -72,10 +79,10 @@ router
       const user = await usersService.remove(req.params.id);
 
       if (!user) {
-        throw new ErrorHandler(404, 'User not found');
+        throw new ErrorHandler(NOT_FOUND, getStatusText(NOT_FOUND));
       }
 
-      return res.status(204).json({
+      return res.status(NO_CONTENT).json({
         message: 'The user has been deleted'
       });
     } catch (err) {

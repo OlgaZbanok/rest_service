@@ -4,6 +4,7 @@ const path = require('path');
 const YAML = require('yamljs');
 const { logger } = require('./helpers/logger');
 const { handleError, ErrorHandler } = require('./helpers/error');
+const { NOT_FOUND, getStatusText } = require('http-status-codes');
 const userRouter = require('./resources/users/user.router');
 const boardRouter = require('./resources/boards/board.router');
 const taskRouter = require('./resources/tasks/task.router');
@@ -40,7 +41,7 @@ app.use('/boards', checkToken, boardRouter);
 app.use('/boards/:boardId/tasks', checkToken, taskRouter);
 
 app.get('*', (req, res, next) => {
-  const err = new ErrorHandler(404, 'Page not found');
+  const err = new ErrorHandler(NOT_FOUND, getStatusText(NOT_FOUND));
   handleError(err, req, res);
   next();
 });

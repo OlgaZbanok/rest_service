@@ -3,6 +3,13 @@ const Task = require('./task.model');
 const validateUUID = require('../../helpers/validateUUID');
 const { ErrorHandler } = require('../../helpers/error');
 const tasksService = require('./task.service');
+const {
+  BAD_REQUEST,
+  OK,
+  NOT_FOUND,
+  NO_CONTENT,
+  getStatusText
+} = require('http-status-codes');
 
 router
   .route('/')
@@ -11,10 +18,10 @@ router
       const tasks = await tasksService.getByBoardId(req.params.boardId);
 
       if (!tasks) {
-        throw new ErrorHandler(400, 'Bad request');
+        throw new ErrorHandler(BAD_REQUEST, getStatusText(BAD_REQUEST));
       }
 
-      res.status(200).json(tasks.map(Task.toResponse));
+      res.status(OK).json(tasks.map(Task.toResponse));
     } catch (err) {
       return next(err);
     }
@@ -24,10 +31,10 @@ router
       const task = await tasksService.add(req.params.boardId, req.body);
 
       if (!task) {
-        throw new ErrorHandler(400, 'Bad request');
+        throw new ErrorHandler(BAD_REQUEST, getStatusText(BAD_REQUEST));
       }
 
-      res.status(200).json(Task.toResponse(task));
+      res.status(OK).json(Task.toResponse(task));
     } catch (err) {
       return next(err);
     }
@@ -41,12 +48,12 @@ router
 
       if (!task) {
         throw new ErrorHandler(
-          404,
+          NOT_FOUND,
           `Task with id = ${req.params.id} is not found`
         );
       }
 
-      res.status(200).json(Task.toResponse(task));
+      res.status(OK).json(Task.toResponse(task));
     } catch (err) {
       return next(err);
     }
@@ -56,10 +63,10 @@ router
       const task = await tasksService.update(req.params, req.body);
 
       if (!task) {
-        throw new ErrorHandler(400, 'Bad request');
+        throw new ErrorHandler(BAD_REQUEST, getStatusText(BAD_REQUEST));
       }
 
-      res.status(200).json(Task.toResponse(task));
+      res.status(OK).json(Task.toResponse(task));
     } catch (err) {
       return next(err);
     }
@@ -69,10 +76,10 @@ router
       const result = await tasksService.remove(req.params);
 
       if (!result) {
-        throw new ErrorHandler(404, 'Task is not found');
+        throw new ErrorHandler(NOT_FOUND, getStatusText(NOT_FOUND));
       }
 
-      res.status(204).json({ message: 'The task has been deleted' });
+      res.status(NO_CONTENT).json({ message: 'The task has been deleted' });
     } catch (err) {
       return next(err);
     }
