@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { logger } = require('../helpers/logger');
 const { MONGO_CONNECTION_STRING } = require('../common/config');
 const User = require('../resources/users/user.model');
-const createHash = require('../helpers/hash');
+const { createHash } = require('../helpers/hash');
 
 const createAdminUser = async () => {
   const password = 'admin';
