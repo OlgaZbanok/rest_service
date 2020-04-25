@@ -4,4 +4,7 @@ const saltRounds = 10;
 
 const createHash = async password => await bcrypt.hash(password, saltRounds);
 
-module.exports = createHash;
+const comparePassword = async (password, hash) =>
+  await bcrypt.compare(password, hash);
+
+module.exports = { createHash, comparePassword };

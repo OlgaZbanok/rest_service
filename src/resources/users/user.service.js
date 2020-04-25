@@ -2,7 +2,7 @@ const usersRepo = require('./user.db.repository');
 const tasksService = require('../tasks/task.service');
 const { ErrorHandler } = require('../../helpers/error');
 const { INTERNAL_SERVER_ERROR, getStatusText } = require('http-status-codes');
-const createHash = require('../../helpers/hash');
+const { createHash, comparePassword } = require('../../helpers/hash');
 const User = require('./user.model');
 
 const getAll = async () => await usersRepo.getAll();
@@ -14,7 +14,6 @@ const add = async data => {
     const { name, login, password } = data;
     const hashPassword = await createHash(password);
     const user = new User({ name, login, hashPassword });
-
     await usersRepo.add(user);
     return user;
   } catch (err) {
@@ -38,4 +37,15 @@ const remove = async id => {
   return result;
 };
 
-module.exports = { getAll, getById, add, update, remove };
+const isExist = async (login, password) => {
+  const userByLogin = await usersRepo.isExist(login);
+  if (userByLogin) {
+    const { password: hash } = userByLogin;
+    const isMatch = await comparePassword(password, hash);
+
+    if (isMatch) return userByLogin;
+  }
+  return;
+};
+
+module.exports = { getAll, getById, add, update, remove, isExist };
