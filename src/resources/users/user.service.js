@@ -1,5 +1,8 @@
 const usersRepo = require('./user.db.repository');
 const tasksService = require('../tasks/task.service');
+const { ErrorHandler } = require('../../helpers/error');
+const { INTERNAL_SERVER_ERROR, getStatusText } = require('http-status-codes');
+const createHash = require('../../helpers/hash');
 const User = require('./user.model');
 
 const getAll = async () => await usersRepo.getAll();
@@ -7,10 +10,19 @@ const getAll = async () => await usersRepo.getAll();
 const getById = async id => await usersRepo.getById(id);
 
 const add = async data => {
-  const { name, login, password } = data;
-  const user = new User({ name, login, password });
-  await usersRepo.add(user);
-  return user;
+  try {
+    const { name, login, password } = data;
+    const hashPassword = await createHash(password);
+    const user = new User({ name, login, hashPassword });
+
+    await usersRepo.add(user);
+    return user;
+  } catch (err) {
+    throw new ErrorHandler(
+      INTERNAL_SERVER_ERROR,
+      getStatusText(INTERNAL_SERVER_ERROR)
+    );
+  }
 };
 
 const update = async (id, data) => {
